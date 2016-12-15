@@ -8,16 +8,29 @@ var geocodeAPI = "35e5548c618555b1a43eb4759d26b260";
 var helper = {
 
   // This function serves our purpose of running the query to geolocate.
-  runQuery: function(location) {
+  runQuery: function(searchTerm, recordsToReturn, userStartDate, userEndDate) {
 
-    console.log(location);
+    //NYT API
+    var beginningDate = "&begin_date=18000101";
+    var endDate = "&end_date=20161212";
 
-    // Figure out the geolocation
-    var queryURL = "http://api.opencagedata.com/geocode/v1/json?query=" + location + "&pretty=1&key=" + geocodeAPI;
-    return axios.get(queryURL).then(function(response) {
-      // If get get a result, return that result's formatted address property
-      if (response.data.results[0]) {
-        return response.data.results[0].formatted;
+    // if (userStartDate.length == 8) {
+    //    beginningDate =  "&begin_date=" + userStartDate;
+    // }
+    // if (userEndDate.length == 8) {
+    //    endDate =  "&end_date=" + userEndDate;
+    // }
+
+    //https://api.nytimes.com/svc/search/v2/articlesearch.json?q=oil&begin_date=&begin_date=18000101&end_date=&end_date=20161212&api-key=56de0714f810449bba3bab87764788e9
+    var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchTerm + beginningDate + endDate;
+    queryURL += "&api-key=56de0714f810449bba3bab87764788e9";
+
+    return axios.get(queryURL).then(function(result) {
+      // console.log(result.data.response.docs);
+
+      // If get a result, return that result's formatted
+      if (result.data.response.docs.length > 0) {
+        return result.data.results;
       }
       // If we don't get any results, return an empty string
       return "";
@@ -26,12 +39,13 @@ var helper = {
 
   // This function hits our own server to retrieve the record of query results
   getHistory: function() {
-    return axios.get("/api");
+    console.log('Retrieve saved data');
+    return axios.get("/api/saved");
   },
 
   // This function posts new searches to our database.
   postHistory: function(location) {
-    return axios.post("/api", { location: location });
+    return axios.post("/api/saved", { location: location });
   }
 };
 

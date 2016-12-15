@@ -12,7 +12,7 @@ var Results = React.createClass({
         </div>
         <div className="panel-body text-center">
           <h1>Articles:</h1>
-          <p>{this.props.articles}</p>
+          <p>{this.props.queryResults}</p>
         </div>
       </div>
     );

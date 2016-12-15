@@ -20252,8 +20252,7 @@
 	  displayName: "Main",
 	
 	
-	  // Here we set a generic state associated with the number of clicks
-	  // Note how we added in this history state variable
+	  // Here we set a generic state associated with each component
 	  getInitialState: function getInitialState() {
 	    return { searchTerm: "", results: "", history: [] };
 	  },
@@ -20262,7 +20261,6 @@
 	  componentDidMount: function componentDidMount() {
 	    // Get the latest history.
 	    helpers.getHistory().then(function (response) {
-	      console.log(response);
 	      if (response !== this.state.history) {
 	        console.log("History", response.data);
 	        this.setState({ history: response.data });
@@ -20273,25 +20271,26 @@
 	  // If the component changes (i.e. if a search is entered)...
 	  componentDidUpdate: function componentDidUpdate() {
 	
-	    // Run the query for the address
+	    // Run the query for the articles
 	    helpers.runQuery(this.state.searchTerm).then(function (data) {
 	      if (data !== this.state.results) {
-	        console.log("Address", data);
+	        console.log("NYT", data);
 	        this.setState({ results: data });
 	
 	        // After we've received the result... then post the search term to our history.
-	        helpers.postHistory(this.state.searchTerm).then(function () {
-	          console.log("Updated!");
+	        // helpers.postHistory(this.state.searchTerm).then(function() {
+	        //   console.log("Updated!");
 	
-	          // After we've done the post... then get the updated history
-	          helpers.getHistory().then(function (response) {
-	            console.log("Current History", response.data);
+	        //   // After we've done the post... then get the updated history
+	        //   helpers.getHistory().then(function(response) {
+	        //     console.log("Current History", response.data);
 	
-	            console.log("History", response.data);
+	        //     console.log("History", response.data);
 	
-	            this.setState({ history: response.data });
-	          }.bind(this));
-	        }.bind(this));
+	        //     this.setState({ history: response.data });
+	
+	        //   }.bind(this));
+	        // }.bind(this));
 	      }
 	    }.bind(this));
 	  },
@@ -20314,16 +20313,12 @@
 	          React.createElement(
 	            "h2",
 	            { className: "text-center" },
-	            "New York Times Article Scrubber"
+	            "New York Times Article Scanner"
 	          ),
 	          React.createElement(
 	            "p",
 	            { className: "text-center" },
-	            React.createElement(
-	              "h3",
-	              null,
-	              "Search for and annotate articles of interest"
-	            ),
+	            "Search for and annotate articles of interest",
 	            React.createElement(
 	              "em",
 	              null,
@@ -20339,7 +20334,7 @@
 	        React.createElement(
 	          "div",
 	          { className: "col-md-6" },
-	          React.createElement(Results, { queryResults: this.state.queryResults })
+	          React.createElement(Results, { queryResults: this.state.results })
 	        )
 	      ),
 	      React.createElement(
@@ -20493,7 +20488,7 @@
 	        React.createElement(
 	          "p",
 	          null,
-	          this.props.articles
+	          this.props.queryResults
 	        )
 	      )
 	    );
@@ -20560,16 +20555,29 @@
 	var helper = {
 	
 	  // This function serves our purpose of running the query to geolocate.
-	  runQuery: function runQuery(location) {
+	  runQuery: function runQuery(searchTerm, recordsToReturn, userStartDate, userEndDate) {
 	
-	    console.log(location);
+	    //NYT API
+	    var beginningDate = "&begin_date=18000101";
+	    var endDate = "&end_date=20161212";
 	
-	    // Figure out the geolocation
-	    var queryURL = "http://api.opencagedata.com/geocode/v1/json?query=" + location + "&pretty=1&key=" + geocodeAPI;
-	    return axios.get(queryURL).then(function (response) {
-	      // If get get a result, return that result's formatted address property
-	      if (response.data.results[0]) {
-	        return response.data.results[0].formatted;
+	    // if (userStartDate.length == 8) {
+	    //    beginningDate =  "&begin_date=" + userStartDate;
+	    // }
+	    // if (userEndDate.length == 8) {
+	    //    endDate =  "&end_date=" + userEndDate;
+	    // }
+	
+	    //https://api.nytimes.com/svc/search/v2/articlesearch.json?q=oil&begin_date=&begin_date=18000101&end_date=&end_date=20161212&api-key=56de0714f810449bba3bab87764788e9
+	    var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchTerm + beginningDate + endDate;
+	    queryURL += "&api-key=56de0714f810449bba3bab87764788e9";
+	
+	    return axios.get(queryURL).then(function (result) {
+	      // console.log(result.data.response.docs);
+	
+	      // If get a result, return that result's formatted
+	      if (result.data.response.docs.length > 0) {
+	        return result.data.results;
 	      }
 	      // If we don't get any results, return an empty string
 	      return "";
@@ -20578,12 +20586,13 @@
 	
 	  // This function hits our own server to retrieve the record of query results
 	  getHistory: function getHistory() {
-	    return axios.get("/api");
+	    console.log('Retrieve saved data');
+	    return axios.get("/api/saved");
 	  },
 	
 	  // This function posts new searches to our database.
 	  postHistory: function postHistory(location) {
-	    return axios.post("/api", { location: location });
+	    return axios.post("/api/saved", { location: location });
 	  }
 	};
 	
