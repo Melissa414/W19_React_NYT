@@ -20588,7 +20588,7 @@
 	        //   resultsArray.push(tempObject);
 	        // }
 	
-	        var resultData = result.data.response.docs[i].headline.main;
+	        var resultData = result.data.response.docs[0].headline.main;
 	
 	        return resultData;
 	      }
