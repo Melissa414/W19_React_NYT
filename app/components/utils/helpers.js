@@ -31,7 +31,12 @@ var helper = {
       console.log(result);
       // If get a result, return that result's formatted
       if (result) {
-        return result.data.response.docs[0].headline.main;
+          var returnedResults = result.data.response.docs[0].headline.main + "<br>" + 
+            result.data.response.docs[1].headline.main + "<br>" + 
+            result.data.response.docs[2].headline.main + "<br>" + 
+            result.data.response.docs[3].headline.main + "<br>" + 
+            result.data.response.docs[4].headline.main + "<br>";
+        return returnedResults;
       }
       // If we don't get any results, return an empty string
       return "";
