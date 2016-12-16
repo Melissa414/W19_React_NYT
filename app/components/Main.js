@@ -30,6 +30,11 @@ var Main = React.createClass({
 
   // If the component changes (i.e. if a search is entered)...
   componentDidUpdate: function() {
+    console.log('running NYT API Request');
+    // Prevent API call on initial page load
+    if (!this.state.searchTerm) {
+      return;
+    }
 
     // Run the query for the articles
     helpers.runQuery(this.state.searchTerm).then(function(data) {
