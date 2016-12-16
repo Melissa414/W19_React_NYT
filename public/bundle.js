@@ -20579,15 +20579,18 @@
 	      console.log(result);
 	      var resultsArray = [];
 	      if (result) {
-	        for (var i = 0; i < 5; i++) {
-	          var tempObject = {
-	            headline: result.data.response.docs[i].headline.main,
-	            web_url: result.data.response.docs[i].web_url
-	          };
-	          resultsArray.push(tempObject);
-	        }
+	        //Attempt at passing an object of 5 article's information
+	        // for (var i=0; i<5; i++) {
+	        //   var tempObject = {
+	        //     headline: result.data.response.docs[i].headline.main,
+	        //     web_url: result.data.response.docs[i].web_url
+	        //   }
+	        //   resultsArray.push(tempObject);
+	        // }
 	
-	        return resultsArray;
+	        var resultData = result.data.response.docs[i].headline.main;
+	
+	        return resultData;
 	      }
 	      // If we don't get any results, return an empty string
 	      return "";
