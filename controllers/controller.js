@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
 // Require Article Schema
-var Article = require("../models/Article");
+var Article = require("../models/article");
 
 // Main "/" Route. This will redirect the user to our rendered React application
 app.get("/", function(req, res) {
