@@ -20490,11 +20490,15 @@
 	          null,
 	          "Articles:"
 	        ),
-	        React.createElement(
-	          "p",
-	          null,
-	          this.props.queryResults
-	        )
+	        this.props.queryResults.map(function (Headlines, i) {
+	          return React.createElement(
+	            "p",
+	            { key: i },
+	            Headlines.headline,
+	            " - ",
+	            Headlines.web_url
+	          );
+	        })
 	      )
 	    );
 	  }
@@ -20581,10 +20585,17 @@
 	    console.log(queryURL);
 	    return axios.get(queryURL).then(function (result) {
 	      console.log(result);
-	      // If get a result, return that result's formatted
+	      var resultsArray = [];
 	      if (result) {
-	        var returnedResults = result.data.response.docs[0].headline.main + "<br>" + result.data.response.docs[1].headline.main + "<br>" + result.data.response.docs[2].headline.main + "<br>" + result.data.response.docs[3].headline.main + "<br>" + result.data.response.docs[4].headline.main + "<br>";
-	        return returnedResults;
+	        for (var i = 0; i < 5; i++) {
+	          var tempObject = {
+	            headline: result.data.response.docs[i].headline.main,
+	            web_url: result.data.response.docs[i].web_url
+	          };
+	          resultsArray.push(tempObject);
+	        }
+	
+	        return resultsArray;
 	      }
 	      // If we don't get any results, return an empty string
 	      return "";

@@ -12,7 +12,14 @@ var Results = React.createClass({
         </div>
         <div className="panel-body text-center">
           <h1>Articles:</h1>
-          <p>{this.props.queryResults}</p>
+
+            {/* Here we use a map function to loop through an array in JSX */}
+            {this.props.queryResults.map(function(Headlines, i) {
+              return (
+                <p key={i}>{Headlines.headline} - {Headlines.web_url}</p>
+              );
+            })}
+
         </div>
       </div>
     );
