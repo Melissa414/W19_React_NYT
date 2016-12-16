@@ -31,7 +31,7 @@ var helper = {
       console.log(result);
       // If get a result, return that result's formatted
       if (result.data.response.docs.length > 0) {
-        return result.data.results;
+        return result.response.docs;
       }
       // If we don't get any results, return an empty string
       return "";
