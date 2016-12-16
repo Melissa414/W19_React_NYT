@@ -20583,7 +20583,7 @@
 	      console.log(result);
 	      // If get a result, return that result's formatted
 	      if (result) {
-	        return result;
+	        return result.data.response.docs[0].headline.main;
 	      }
 	      // If we don't get any results, return an empty string
 	      return "";
