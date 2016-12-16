@@ -28,10 +28,10 @@ var helper = {
 
     console.log(queryURL);
     return axios.get(queryURL).then(function(result) {
-      console.log(result.response);
+      console.log(result);
       // If get a result, return that result's formatted
       if (result) {
-        return result.response;
+        return result;
       }
       // If we don't get any results, return an empty string
       return "";
