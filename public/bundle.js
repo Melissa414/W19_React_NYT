@@ -20490,15 +20490,7 @@
 	          null,
 	          "Articles:"
 	        ),
-	        this.props.queryResults.map(function (Headlines, i) {
-	          return React.createElement(
-	            "p",
-	            { key: i },
-	            Headlines.headline,
-	            " - ",
-	            Headlines.web_url
-	          );
-	        })
+	        this.props.queryResults
 	      )
 	    );
 	  }
